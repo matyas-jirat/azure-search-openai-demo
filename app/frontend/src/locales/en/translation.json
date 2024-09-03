@@ -21,13 +21,13 @@
     },
     "developerSettings": "Developer settings",
 
-    "chatEmptyStateTitle": "Chat with your data",
+    "chatEmptyStateTitle": "Chat with your NDAs",
     "chatEmptyStateSubtitle": "Ask anything or try an example",
     "defaultExamples": {
-        "1": "What is included in my Northwind Health Plus plan that is not in standard?",
-        "2": "What happens in a performance review?",
-        "3": "What does a Product Manager do?",
-        "placeholder": "Type a new question (e.g. does my plan cover annual eye exams?)"
+        "1": "Can you give me in bulet list form all the partners from NDAs?",
+        "2": "Is there an NDA which will end?",
+        "3": "Do you have access to meta-data or only RAG information?",
+        "placeholder": "Type a new question (e.g. which partner has the lowest fine for breaking NDA?)"
     },
     "askTitle": "Ask your data",
     "gpt4vExamples": {
