@@ -10,7 +10,7 @@ from approaches.approach import Approach
 
 class ChatApproach(Approach, ABC):
     query_prompt_few_shots: list[ChatCompletionMessageParam] = [
-        {"role": "user", "content": "What are ending NDAs?"},
+        {"role": "user", "content": "What are ending NDAs??"},
         {"role": "assistant", "content": "Provide tabular form of Partner Name | Date signed | Date valid to. You are TATRA DEFENCE VEHICLE a.s. so do not include yourself."},
         {"role": "user", "content": "What are NDAs I signed?"},
         {"role": "assistant", "content": "Show NDAs which the user signed to 90% accuracy"},
