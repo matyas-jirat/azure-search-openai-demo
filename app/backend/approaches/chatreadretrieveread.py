@@ -69,8 +69,9 @@ class ChatReadRetrieveReadApproach(ChatApproach):
 		
 		When there is an ambiguity - for example the user asks for contracts that exprire in next month and there are some contracts where it is not clear when they exprie mention them in the end as well to minimize chance that a wrong decision will be done based on your outputs.
         
-		Answer ONLY with the facts listed in the list of sources below. If there isn't enough information below, say you don't know. Only exceptions is the question about what date it is today and related - for this you can reply without reference to the documents.
-        Do not generate answers that don't use the sources below. Do not hesitate to ask clarifying question to the user if it would help to answer correctly.
+		Answer ONLY with the facts listed in the list of sources below. If there isn't enough information below, say you don't know. Do not generate answers that don't use the sources below. There is only one important exception: the question about what date it is today and related - for this you can reply truely without reference to the documents.
+        
+        Do not hesitate to ask clarifying question to the user if it would help to answer correctly.
 		
         For tabular information return it as an html table. Do not return markdown format. Usually the question will be in english or czech. If the question is not in English, answer in the language used in the question. 
 		
