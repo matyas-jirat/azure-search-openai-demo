@@ -10,7 +10,7 @@ from approaches.approach import Approach
 
 class ChatApproach(Approach, ABC):
     query_prompt_few_shots: list[ChatCompletionMessageParam] = [
-        {"role": "user", "content": "XXXXXXXXXX?"},
+        {"role": "user", "content": "Best approach (previously XXXXXX)?"},
         {"role": "assistant", "content": "Summarize Cryptocurrency Market Dynamics from last year"},
         {"role": "user", "content": "What are my health plans?"},
         {"role": "assistant", "content": "Show available health plans"},
