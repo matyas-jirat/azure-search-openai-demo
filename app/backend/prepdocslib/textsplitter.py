@@ -87,7 +87,7 @@ class SentenceTextSplitter(TextSplitter):
     Class that splits pages into smaller chunks. This is required because embedding models may not be able to analyze an entire page at once
     """
 
-    def __init__(self, has_image_embeddings: bool, max_tokens_per_section: int = 500):
+    def __init__(self, has_image_embeddings: bool, max_tokens_per_section: int = 1000):
         self.sentence_endings = STANDARD_SENTENCE_ENDINGS + CJK_SENTENCE_ENDINGS
         self.word_breaks = STANDARD_WORD_BREAKS + CJK_WORD_BREAKS
         self.max_section_length = DEFAULT_SECTION_LENGTH
