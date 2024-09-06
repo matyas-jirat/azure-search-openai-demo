@@ -1,10 +1,7 @@
-import asyncio
-import csv
 import aiohttp
+import asyncio
 import base64
-import json
-import time
-import requests
+import csv
 import os
 
 
@@ -99,7 +96,7 @@ def check_and_get_new_files(metadata_file_path, data_folder_path):
     # Load existing metadata from CSV (if it exists), skipping the first 3 lines (header)
     processed_files = set()
     if os.path.exists(metadata_file_path):
-        with open(metadata_file_path, 'r') as f:
+        with open(metadata_file_path) as f:
             # Skip the first 3 lines (header)
             for _ in range(3):
                 next(f)
