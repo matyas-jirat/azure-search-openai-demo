@@ -24,10 +24,10 @@
     "chatEmptyStateTitle": "Chat with your NDAs",
     "chatEmptyStateSubtitle": "Ask anything or try an example",
     "defaultExamples": {
-        "1": "Can you give me in bulet list form all the partners from NDAs?",
+        "1": "List of all partners from NDAs in bullet form?",
         "2": "Is there an NDA which will end?",
-        "3": "Do you have access to meta-data or only RAG information?",
-        "placeholder": "Type a new question (e.g. which partner has the lowest fine for breaking NDA?)"
+        "3": "What information can you help me with?",
+        "placeholder": "Type a new question (e.g. which partner has the highest contractual fine for breaking NDA?)"
     },
     "askTitle": "Ask your data",
     "gpt4vExamples": {
