@@ -92,7 +92,7 @@ async def process_files(new_file_names, api_key):
                     if field['field_name'] in field_values:
                         field_values[field['field_name']] = field['content']
                 f.write(f"\"{file_name}\",\"{field_values['contracting_party']}\",\"{field_values['valid_to']}\",\"{field_values['signed_date']}\",\"{field_values['signatory_tatra']}\"\n")
-                partner_file_mapping.write(f"\"{file_name}\",\"{field_values['contracting_party']}\")
+                partner_file_mapping.write(f"\"{file_name}\",\"{field_values['contracting_party']}\"")
 
 
 def check_and_get_new_files(metadata_file_path, data_folder_path):
