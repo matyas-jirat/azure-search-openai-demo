@@ -1,4 +1,3 @@
-import aiohttp
 import asyncio
 import base64
 import csv
