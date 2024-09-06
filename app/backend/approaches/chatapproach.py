@@ -15,7 +15,10 @@ class ChatApproach(Approach, ABC):
         {"role": "user", "content": "What did I sign?"},
         {"role": "assistant", "content": "To answer that I need to know who you are. What is your name?"},
         {"role": "user", "content": "John Doe"},
-        {"role": "assistant", "content": "Thank you John. I found 2 contracts with your name. Here are the references [1][2]. Do you want me to get some details about them?"},
+        {
+            "role": "assistant",
+            "content": "Thank you John. I found 2 contracts with your name. Here are the references [1][2]. Do you want me to get some details about them?",
+        },
     ]
     NO_RESPONSE = "0"
 
