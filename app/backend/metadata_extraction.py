@@ -80,17 +80,19 @@ async def process_files(new_file_names, api_key):
           output[file_name] = parse_fields(fields)
 
       with open(metadata_file_path, 'a', newline='') as f:
-          for file_name, parsed_fields in output.items():
-              field_values = {
-                  'contracting_party': '',
-                  'valid_to': '',
-                  'signed_date': '',
-                  'signatory_tatra': ''
-              }
-              for field in parsed_fields:
-                  if field['field_name'] in field_values:
-                      field_values[field['field_name']] = field['content']
-              f.write(f"\"{file_name}\",\"{field_values['contracting_party']}\",\"{field_values['valid_to']}\",\"{field_values['signed_date']}\",\"{field_values['signatory_tatra']}\"\n")
+          with open(data_folder_path+'partner_file_mapping.txt') as partner_file_mapping:
+            for file_name, parsed_fields in output.items():
+                field_values = {
+                    'contracting_party': '',
+                    'valid_to': '',
+                    'signed_date': '',
+                    'signatory_tatra': ''
+                }
+                for field in parsed_fields:
+                    if field['field_name'] in field_values:
+                        field_values[field['field_name']] = field['content']
+                f.write(f"\"{file_name}\",\"{field_values['contracting_party']}\",\"{field_values['valid_to']}\",\"{field_values['signed_date']}\",\"{field_values['signatory_tatra']}\"\n")
+                partner_file_mapping.write(f"\"{file_name}\",\"{field_values['contracting_party']}\")
 
 
 def check_and_get_new_files(metadata_file_path, data_folder_path):
