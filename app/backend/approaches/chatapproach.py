@@ -10,18 +10,20 @@ from approaches.approach import Approach
 
 class ChatApproach(Approach, ABC):
     query_prompt_few_shots: list[ChatCompletionMessageParam] = [
-        {"role": "user", "content": "What are ending NDAs?"},
-        {"role": "assistant", "content": "Provide tabular form of Partner Name | Date signed | Date valid to. You are TATRA DEFENCE VEHICLE a.s. so do not include yourself."},
-        {"role": "user", "content": "What are NDAs I signed?"},
-        {"role": "assistant", "content": "Show NDAs which the user signed to 90% accuracy"},
+        {"role": "user", "content": "What is the contract penalty for contractor X?"},
+        {"role": "assistant", "content": "The penalty is 3 000 dollars. The reference document is here [link_to_doc]."},
+        {"role": "user", "content": "What did I sign?"},
+        {"role": "assistant", "content": "To answer that I need to know who you are. What is your name?"},
+        {"role": "user", "content": "John Doe"},
+        {"role": "assistant", "content": "Thank you John. I found 2 contracts with your name. Here are the references [1][2]. Do you want me to get some details about them?"},
     ]
     NO_RESPONSE = "0"
 
     follow_up_questions_prompt_content = """Generate 3 very brief follow-up questions that the user would likely ask next.
     Enclose the follow-up questions in double angle brackets. Example:
-    <<Are there exclusions for prescriptions?>>
-    <<Which pharmacies can be ordered from?>>
-    <<What is the limit for over-the-counter medication?>>
+    <<What is the contractual fine for the document?>>
+    <<After how many days does this contract end?>>
+    <<Who signed the contract for the counter party?>>
     Do no repeat questions that have already been asked.
     Make sure the last question ends with ">>".
     """

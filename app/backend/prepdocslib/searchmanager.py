@@ -98,17 +98,18 @@ class SearchManager:
                     vector_search_dimensions=self.embedding_dimensions,
                     vector_search_profile_name="embedding_config",
                 ),
-                SimpleField(name="category", type="Edm.String", filterable=True, facetable=True),
+                SearchableField(name="category", type="Edm.String", searchable=True, filterable=True, facetable=True),
                 SimpleField(
                     name="sourcepage",
                     type="Edm.String",
                     filterable=True,
                     facetable=True,
                 ),
-                SimpleField(
+                SearchableField(
                     name="sourcefile",
                     type="Edm.String",
                     filterable=True,
+                    searchable=True,
                     facetable=True,
                 ),
                 SimpleField(
