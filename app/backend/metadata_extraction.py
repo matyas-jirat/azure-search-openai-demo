@@ -83,9 +83,9 @@ async def process_files(new_file_names, api_key):
         for file_name, result in zip(new_file_names, results):
             fields = result["analyzeResult"]["documents"][0]["fields"]
             output[file_name] = parse_fields(fields)
-
+        
         with open(metadata_file_path, "a", newline="") as f:
-            with open(data_folder_path + "partner_file_mapping.txt") as partner_file_mapping:
+            with open(data_folder_path + "partner_file_mapping.txt", "a") as partner_file_mapping:
                 for file_name, parsed_fields in output.items():
                     field_values = {"contracting_party": "", "valid_to": "", "signed_date": "", "signatory_tatra": ""}
                     for field in parsed_fields:
@@ -94,7 +94,7 @@ async def process_files(new_file_names, api_key):
                     f.write(
                         f"\"{file_name}\",\"{field_values['contracting_party']}\",\"{field_values['valid_to']}\",\"{field_values['signed_date']}\",\"{field_values['signatory_tatra']}\"\n"
                     )
-                    partner_file_mapping.write(f"\"{file_name}\",\"{field_values['contracting_party']}\"")
+                    partner_file_mapping.write(f"\"{file_name}\",\"{field_values['contracting_party']}\"\n")
 
 
 def check_and_get_new_files(metadata_file_path, data_folder_path):
@@ -114,10 +114,10 @@ def check_and_get_new_files(metadata_file_path, data_folder_path):
 
     # Get all files in the data folder
     all_files = set(os.listdir(data_folder_path))
-    all_files = {file for file in all_files if not (file.endswith(".md5") or file == "documents_metadata.txt")}
+    all_pdf_files = {file for file in all_files if file.endswith(".pdf")}
 
     # Find new files to process
-    new_files = all_files - processed_files
+    new_files = all_pdf_files - processed_files
 
     if new_files:
         print(f"Found {len(new_files)} new files to process.")
@@ -137,5 +137,6 @@ if __name__ == "__main__":
     if new_file_names == []:
         print("No new files")
     else:
+        print(f"Processing files: {new_file_names}")
         # Process files asynchronously
         asyncio.run(process_files(new_file_names, api_key))
