@@ -138,7 +138,7 @@ class AdlsGen2Setup:
                     "groupTypes": ["Unified"],
                     "securityEnabled": self.security_enabled_groups,
                     "mailEnabled": False,  # Add mailEnabled property
-                    "mailNickname": group_name.replace(" ", "_")  # Add mailNickname
+                    "mailNickname": group_name.replace(" ", "_"),  # Add mailNickname
                 }
                 async with session.post("https://graph.microsoft.com/v1.0/groups", json=group) as response:
                     content = await response.json()

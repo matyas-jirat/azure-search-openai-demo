@@ -83,7 +83,7 @@ async def process_files(new_file_names, api_key):
         for file_name, result in zip(new_file_names, results):
             fields = result["analyzeResult"]["documents"][0]["fields"]
             output[file_name] = parse_fields(fields)
-        
+
         with open(metadata_file_path, "a", newline="") as f:
             with open(data_folder_path + "partner_file_mapping.txt", "a") as partner_file_mapping:
                 for file_name, parsed_fields in output.items():
