@@ -74,7 +74,7 @@ if [ $# -gt 0 ]; then
   additionalArgs="$@"
 fi
 
-./.venv/bin/python ./app/backend/metadata_extraction.py
+#./.venv/bin/python ./app/backend/metadata_extraction.py
 
 ./.venv/bin/python ./app/backend/prepdocs.py './data/*' --verbose \
 --subscriptionid $AZURE_SUBSCRIPTION_ID  \

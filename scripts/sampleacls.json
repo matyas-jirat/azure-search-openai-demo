@@ -1,38 +1,18 @@
 {
     "files": {
-        "Benefit_Options.pdf": {
-            "directory": "benefitinfo"
-        },
-        "employee_handbook.pdf": {
-            "directory": "employeeinfo"
-        },
-        "Northwind_Health_Plus_Benefits_Details.pdf": {
-            "directory": "benefitinfo"
-        },
-        "Northwind_Standard_Benefits_Details.pdf": {
-            "directory": "benefitinfo"
-        },
-        "PerksPlus.pdf": {
-            "directory": "benefitinfo"
-        },
-        "role_library.pdf": {
-            "directory": "employeeinfo"
+        "IT_FLO Group s.r.o._NDA.pdf": {
+            "directory": "sharepoint2"
         }
     },
     "directories": {
-        "employeeinfo": {
-            "groups": ["GPTKB_HRTest"]
-        },
-        "benefitinfo": {
-            "groups": ["GPTKB_EmployeeTest", "GPTKB_HRTest"]
+        "sharepoint2": {
+            "groups": ["GPTKB_AdminTest"]
         },
         "/": {
             "groups": ["GPTKB_AdminTest"]
         }
     },
     "groups": [
-        "GPTKB_AdminTest",
-        "GPTKB_HRTest",
-        "GPTKB_EmployeeTest"
+        "GPTKB_AdminTest"
     ]
 }
