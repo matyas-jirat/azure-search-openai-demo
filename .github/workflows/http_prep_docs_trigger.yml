@@ -124,7 +124,14 @@ jobs:
       shell: pwsh
       env:
         AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-      
+
+    - name: Provision Infrastructure
+      run: azd provision --no-prompt
+      env:
+        AZD_INITIAL_ENVIRONMENT_CONFIG: ${{ secrets.AZD_INITIAL_ENVIRONMENT_CONFIG }}
+        AZURE_SERVER_APP_SECRET: ${{ secrets.AZURE_SERVER_APP_SECRET }}
+        AZURE_CLIENT_APP_SECRET: ${{ secrets.AZURE_CLIENT_APP_SECRET }}
+
     # Runs a single command using the runners shell
     - name: Prep Docs
       run: ./scripts/prepdocs.sh ;
