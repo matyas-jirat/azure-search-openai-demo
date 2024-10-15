@@ -2,7 +2,9 @@ import asyncio
 import base64
 import csv
 from dataclasses import dataclass
+import datetime
 import os
+import time
 from typing import List, Optional
 import aiohttp
 
@@ -66,38 +68,44 @@ class MetadataExtraction:
         """Načte PDF soubor a převede ho na base64 řetězec."""
         file.content.seek(0)  # Přesunutí kurzoru na začátek souboru
         file_content = file.content.read()  # Načtení obsahu souboru jako bytes
-        encoded_string = base64.b64encode(file_content)
-        return encoded_string.decode("utf-8")
+        return base64.b64encode(file_content).decode('utf-8')
 
-    async def _analyze_document_async(self, base64_string, session):
+    async def _analyze_document_async(self, base64_string, session, file_name: Optional[str]) -> tuple[str, List[str]]:
         """Asynchronně analyzuje dokument pomocí Azure Document Intelligence."""
         url = "https://ai-viktorsohajekai089949226317.cognitiveservices.azure.com/documentintelligence/documentModels/Tatra_ner_v2:analyze?api-version=2024-07-31-preview"
-        headers = {"Content-type": "application/json", "Ocp-apim-subscription-key": self.api_key}
-        data = {"base64Source": base64_string}
+        headers = {"Content-type": "application/json", "Ocp-Apim-Subscription-Key": self.api_key}
+        data = {"base64Source": f"{base64_string}"}
+        max_retries = 12  # Maximální počet opakování
+        apim_request_id = ""
 
         async with session.post(url, headers=headers, json=data) as response:
             apim_request_id = response.headers.get("apim-request-id", "Not Found")
-            return apim_request_id
+        time.sleep(1)
 
-    async def _get_analysis_results_async(self, apim_request_id, session):
-        """Asynchronně získává výsledky analýzy na základě apim_request_id, dokud není stav 'succeeded'."""
         url = f"https://ai-viktorsohajekai089949226317.cognitiveservices.azure.com/documentintelligence/documentModels/Tatra_ner_v2/analyzeResults/{apim_request_id}?api-version=2024-07-31-preview"
         headers = {"Ocp-apim-subscription-key": self.api_key}
 
         while True:
             async with session.get(url, headers=headers) as response:
                 response_json = await response.json()
+
+                if "status" not in response_json:
+                    await asyncio.sleep(5)
+                    continue
+
                 if response_json["status"] == "succeeded":
-                    return response_json
+                    return (file_name, self._parse_fields(response_json))
                 elif response_json["status"] == "failed":
                     raise ValueError(
                         f"Azure Document Intelligence analysis failed: {response_json.get('error', 'Unknown error')}"
                     )
                 else:
-                    await asyncio.sleep(5)  # Počkáme 5 sekund před dalším pokusem
+                    await asyncio.sleep(5)
 
-    def _parse_fields(self, fields):
+
+    def _parse_fields(self, result):
         """Zpracuje pole extrahovaná z Azure Document Intelligence."""
+        fields = result["analyzeResult"]["documents"][0]["fields"]
         parsed_fields = []
         for key, value in fields.items():
             field_data = {
@@ -111,25 +119,28 @@ class MetadataExtraction:
 
     async def run_extraction(self):
         """Spustí extrakci metadat z nových souborů."""
-        async for file in self.list_file_strategy.list():  # Použití async for
-            if not file:
-                print("Nebyly nalezeny žádné nové soubory ke zpracování.")
-                return
+        async with aiohttp.ClientSession() as session:
+            tasks = []
+            async for file in self.list_file_strategy.list():
+                if not file:
+                    print("Nebyly nalezeny žádné nové soubory ke zpracování.")
+                    return
+                if file.filename() == self.metadata_file_path:
+                    continue
+                tasks.append(self._analyze_document_async(self._load_base64_from_pdf_file(file), session, file_name=file.filename()))
 
-            async with aiohttp.ClientSession() as session:
-                # 1. Spustíme analýzu dokumentu
-                apim_request_id = await self._analyze_document_async(
-                    self._load_base64_from_pdf_file(file), session
-                )
+            result_collection = {}
+            for future in asyncio.as_completed(tasks):  # Postupné zpracování tasků
+                try:
+                    result = await future
+                    if result is not None:
+                        file_name, results = result
+                        result_collection[file_name] = results
+                except Exception as e:
+                    print(f"Chyba při analýze dokumentu: {e}")
 
-                # 2. Získáme výsledky analýzy
-                result = await self._get_analysis_results_async(apim_request_id, session)
-
-                # 3. Zpracujeme výsledky a uložíme je do metadat
-                fields = result["analyzeResult"]["documents"][0]["fields"]
-                self.metadata[file.filename()] = self._parse_fields(fields)
-        
-        await session.close()
+            await session.close()
+            self.metadata = result_collection
 
     async def reupload_metadata(self):
         """Uloží metadata do souboru a znovu nahraje do úložiště."""
@@ -139,7 +150,7 @@ class MetadataExtraction:
 
         try:
             # Uložení metadat do CSV souboru
-            with open(self.metadata_file_path, "w", newline="", encoding="utf-8") as f:
+            with open(f"{os.path.basename(self.metadata_file_path)}.csv", "w", newline="", encoding="utf-8") as f:
                 writer = csv.writer(f)
                 writer.writerow(
                     ["file_name", "contracting_party", "valid_to", "signed_date", "signatory_tatra"]
@@ -158,16 +169,19 @@ class MetadataExtraction:
                             field_values["signatory_tatra"],
                         ]
                     )
-            print("created csv file")
+            delimiter=","
+            with open(f"{os.path.basename(self.metadata_file_path)}.csv", "r", newline="", encoding="utf-8") as csv_f:
+                with open(self.metadata_file_path, "w", newline="", encoding="utf-8") as txt_f:
+                    reader = csv.reader(csv_f, delimiter=delimiter)
+                    txt_f.write("Use this file for all overview questions as you can easily count amount of partners, for getting information about sign dates, penalties, who signed the documents and contracting parties/partners. \n \n")
+                    for row in reader:
+                        txt_f.write(delimiter.join(row) + '\n')
 
             # Vytvoření objektu File pro BlobManager
             file_to_upload = File(
                 content=open(self.metadata_file_path, "rb"),  # Otevření souboru v binárním režimu pro čtení
                 url=None,
             )
-            print(file_to_upload.url)
-            print(file_to_upload.filename())
-            print(file_to_upload.content)
 
             # Nahrání souboru pomocí BlobManageru
             await self.blob_manager.upload_blob(file_to_upload)
@@ -184,4 +198,4 @@ class MetadataExtraction:
             print("Metadata extraction run successfully.")
             await self.reupload_metadata()
         except Exception as e:
-            print(f"Chyba během extrakce a nahrávání metadat: {e}")
+            print(f"Chyba během extrakce a nahrávání metadat: {e}.")
