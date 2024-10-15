@@ -379,6 +379,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--aiservicemetadatafilename",
         required=False,
+        default="documents_metadata.txt",
         help="AI Service metadata filename within the AZURE_ADLS_GEN2_FILESYSTEM_PATH container",
     )
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")

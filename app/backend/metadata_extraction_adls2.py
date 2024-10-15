@@ -48,14 +48,14 @@ class MetadataExtraction:
                             return metadata_file_path
                         else:
                             print(f"Soubor s metadaty {metadata_file_path} neexistuje.")
-                            return self._create_metadata_file_in_blob_storage()
+                            return self._create_metadata_file_path()
             except Exception as e:
                 print(f"Chyba při ověřování souboru s metadaty: {e}")
                 # V případě chyby vytvoříme nový soubor
-                return self._create_metadata_file_in_blob_storage()
+                return self._create_metadata_file_path()
         else:
             # Vytvoření nového souboru
-            return self._create_metadata_file_in_blob_storage()
+            return self._create_metadata_file_path()
 
     def _create_metadata_file_path(self) -> str:
         """Vytvoří nový soubor s metadaty v Blob Storage."""
