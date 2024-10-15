@@ -27,9 +27,9 @@ class MetadataExtraction:
         self.metadata = {}
         self.metadata_file_path = metadata_file_path
         if not self.metadata_file_path:
-            self.metadata_file_path = self._create_metadata_file_in_blob_storage()
+            self.metadata_file_path = self._create_or_get_metadata_file()
 
-    async def create_or_get_metadata_file(self, metadata_file_path: Optional[str] = None) -> str:
+    async def _create_or_get_metadata_file(self, metadata_file_path: Optional[str] = None) -> str:
         """Vytvoří nový soubor s metadaty v Blob Storage nebo použije existující."""
         if metadata_file_path:
             # Použití existujícího souboru
