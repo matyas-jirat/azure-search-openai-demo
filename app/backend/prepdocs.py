@@ -30,6 +30,8 @@ from prepdocslib.pdfparser import DocumentAnalysisParser, LocalPdfParser
 from prepdocslib.strategy import DocumentAction, SearchInfo, Strategy
 from prepdocslib.textparser import TextParser
 from prepdocslib.textsplitter import SentenceTextSplitter, SimpleTextSplitter
+from metadata_extraction_adls2 import MetadataExtraction
+
 
 logger = logging.getLogger("ingester")
 
@@ -369,6 +371,16 @@ if __name__ == "__main__":
         required=False,
         help="Required if --useintvectorization is specified. Enable Integrated vectorizer indexer support which is in preview)",
     )
+    parser.add_argument(
+        "--aiserviceapikey",
+        required=False,
+        help="AI Service API Key for metadata_extraction",
+    )
+    parser.add_argument(
+        "--aiservicemetadatafilename",
+        required=False,
+        help="AI Service metadata filename within the AZURE_ADLS_GEN2_FILESYSTEM_PATH container",
+    )
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
     args = parser.parse_args()
 
@@ -475,6 +487,14 @@ if __name__ == "__main__":
             use_acls=args.useacls,
             category=args.category,
         )
+
+    metadata_extraction = MetadataExtraction(
+        list_file_strategy=ingestion_strategy.list_file_strategy,
+        blob_manager=ingestion_strategy.blob_manager,
+        api_key=args.aiserviceapikey,
+        metadata_file_path=args.aiservicemetadatafilename,
+    )
+    asyncio.run(metadata_extraction.run())
 
     loop.run_until_complete(main(ingestion_strategy, setup_index=not args.remove and not args.removeall))
     loop.close()

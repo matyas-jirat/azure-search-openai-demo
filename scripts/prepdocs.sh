@@ -26,6 +26,14 @@ if [ -n "$AZURE_SEARCH_ANALYZER_NAME" ]; then
   searchAnalyzerNameArg="--searchanalyzername $AZURE_SEARCH_ANALYZER_NAME"
 fi
 
+if [ -n "$AZURE_AI_SERVICE_API_KEY" ]; then
+  aiServiceAPIKey="--aiserviceapikey $AZURE_AI_SERVICE_API_KEY"
+fi
+
+if [ -n "$AZURE_AI_SERVICE_METADATA_FILENAME" ]; then
+  aiServiceMetadataFilename="--aiservicemetadatafilename $AZURE_AI_SERVICE_METADATA_FILENAME"
+fi
+
 if [ -n "$AZURE_USE_AUTHENTICATION" ]; then
   aclArg="--useacls"
 fi
@@ -74,13 +82,13 @@ if [ $# -gt 0 ]; then
   additionalArgs="$@"
 fi
 
-#./.venv/bin/python ./app/backend/metadata_extraction.py
-
 ./.venv/bin/python app/backend/prepdocs.py 'data' --verbose \
 --subscriptionid $AZURE_SUBSCRIPTION_ID  \
 --storageaccount "$AZURE_STORAGE_ACCOUNT" --container "$AZURE_STORAGE_CONTAINER" --storageresourcegroup $AZURE_STORAGE_RESOURCE_GROUP \
 --searchservice "$AZURE_SEARCH_SERVICE" --index "$AZURE_SEARCH_INDEX" \
 $searchAnalyzerNameArg \
+--aiserviceapikey "$AZURE_AI_SERVICE_API_KEY" \
+--aiservicemetadatafilename "$AZURE_AI_SERVICE_METADATA_FILENAME" \
 --openaihost "$OPENAI_HOST" --openaimodelname "$AZURE_OPENAI_EMB_MODEL_NAME" $openAiDimensionsArg \
 --openaiservice "$AZURE_OPENAI_SERVICE" --openaideployment "$AZURE_OPENAI_EMB_DEPLOYMENT"  \
 --openaicustomurl "$AZURE_OPENAI_CUSTOM_URL" \
