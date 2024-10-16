@@ -7,6 +7,7 @@ import os
 import time
 from typing import List, Optional
 import aiohttp
+import logging
 
 from prepdocslib.blobmanager import BlobManager
 from prepdocslib.listfilestrategy import File, ListFileStrategy
@@ -21,6 +22,7 @@ class MetadataExtraction:
         blob_manager: BlobManager,
         api_key: str,
         metadata_file_path: Optional[str] = None,
+        logger: Optional[logging.Logger] = None
     ):
         self.list_file_strategy = list_file_strategy
         self.blob_manager = blob_manager
@@ -28,8 +30,11 @@ class MetadataExtraction:
         self.files: List[str] = []
         self.metadata = {}
         self.metadata_file_path = metadata_file_path
+        self.logger = logger
         if not self.metadata_file_path:
             self.metadata_file_path = self._create_or_get_metadata_file()
+        if not logger:
+            self.logger = logging.getLogger("ingester")
 
     async def _create_or_get_metadata_file(self, metadata_file_path: Optional[str] = None) -> str:
         """Vytvoří nový soubor s metadaty v Blob Storage nebo použije existující."""
@@ -123,7 +128,7 @@ class MetadataExtraction:
             tasks = []
             async for file in self.list_file_strategy.list():
                 if not file:
-                    print("Nebyly nalezeny žádné nové soubory ke zpracování.")
+                    self.logger.info("Nebyly nalezeny žádné nové soubory ke zpracování.")
                     return
                 if file.filename() == self.metadata_file_path:
                     continue
@@ -137,7 +142,7 @@ class MetadataExtraction:
                         file_name, results = result
                         result_collection[file_name] = results
                 except Exception as e:
-                    print(f"Chyba při analýze dokumentu: {e}")
+                    self.logger.error(f"Chyba při analýze dokumentu: {e}")
 
             await session.close()
             self.metadata = result_collection
@@ -145,7 +150,7 @@ class MetadataExtraction:
     async def reupload_metadata(self):
         """Uloží metadata do souboru a znovu nahraje do úložiště."""
         if not self.metadata:
-            print("No metadata")
+            self.logger.info("No metadata")
             return
 
         try:
@@ -185,17 +190,18 @@ class MetadataExtraction:
 
             # Nahrání souboru pomocí BlobManageru
             await self.blob_manager.upload_blob(file_to_upload)
-            print(f"Metadata file {self.metadata_file_path} was uploaded to {self.blob_manager.account}: {self.blob_manager.container}.")
+            self.logger.info(f"Metadata file {self.metadata_file_path} was uploaded to {self.blob_manager.account}: {self.blob_manager.container}.")
 
         except Exception as e:
-            print(f"Chyba při ukládání nebo nahrávání metadat: {e}")
+            self.logger.error(f"Chyba při ukládání nebo nahrávání metadat: {e}")
 
     async def run(self):
         """Spustí extrakci metadat a jejich nahrání do Blob Storage."""
-        print(f"Extracting metadata from files within {self.blob_manager.container} in {self.blob_manager.account}.")
+        self.logger.info(f"Extracting metadata from files within {self.blob_manager.container} in {self.blob_manager.account}.")
         try:
             await self.run_extraction()
-            print("Metadata extraction run successfully.")
+            self.logger.info("Metadata extraction run successfully.")
             await self.reupload_metadata()
+
         except Exception as e:
-            print(f"Chyba během extrakce a nahrávání metadat: {e}.")
+            self.logger.error(f"Chyba během extrakce a nahrávání metadat: {e}.")

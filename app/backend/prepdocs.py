@@ -499,6 +499,7 @@ if __name__ == "__main__":
     if args.removeall or args.remove:
         pass
     else:
+        logger.info("Starting to set up MetadataExtraction")
         metadata_extraction = MetadataExtraction(
             list_file_strategy=ingestion_strategy.list_file_strategy,
             blob_manager=ingestion_strategy.blob_manager,
