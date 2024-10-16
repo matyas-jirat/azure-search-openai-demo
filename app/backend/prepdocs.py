@@ -250,7 +250,7 @@ if __name__ == "__main__":
         "--skipblobs", action="store_true", help="Skip uploading individual pages to Azure Blob Storage"
     )
     parser.add_argument("--storageaccount", help="Azure Blob Storage account name")
-    parser.add_argument("--container", help="Azure Blob Storage container name")
+    parser.add_argument("--container", default="gptkbcontainer", help="Azure Blob Storage container name")
     parser.add_argument("--storageresourcegroup", help="Azure blob storage resource group")
     parser.add_argument(
         "--storagekey",

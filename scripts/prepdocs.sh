@@ -34,10 +34,6 @@ if [ -n "$AZURE_AI_SERVICE_METADATA_FILENAME" ]; then
   aiServiceMetadataFilename="--aiservicemetadatafilename $AZURE_AI_SERVICE_METADATA_FILENAME"
 fi
 
-if [ -n "$AZURE_STORAGE_CONTAINER" ]; then
-  container="--container $AZURE_STORAGE_CONTAINER"
-fi
-
 if [ -n "$AZURE_USE_AUTHENTICATION" ]; then
   aclArg="--useacls"
 fi
@@ -46,7 +42,7 @@ visionEndpointArg=""
 if [ -n "$AZURE_VISION_ENDPOINT" ]; then
   visionEndpointArg="--visionendpoint $AZURE_VISION_ENDPOINT"
 fi
-  
+
 if [ "$USE_GPT4V" = true ]; then
   searchImagesArg="--searchimages"
 fi
