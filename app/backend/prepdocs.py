@@ -2,7 +2,6 @@ import argparse
 import asyncio
 import logging
 from typing import Optional, Union
-import os
 
 from azure.core.credentials import AzureKeyCredential
 from azure.core.credentials_async import AsyncTokenCredential
@@ -396,16 +395,10 @@ if __name__ == "__main__":
     use_int_vectorization = args.useintvectorization and args.useintvectorization.lower() == "true"
 
     # Use the current user identity to connect to Azure services unless a key is explicitly set for any of them
-    # azd_credential = (
-    #    AzureDeveloperCliCredential()
-    #    if args.tenantid is None
-    #    else AzureDeveloperCliCredential(tenant_id=args.tenantid, process_timeout=1200)
-    #)
-
-    azd_credential = ClientSecretCredential(
-        tenant_id= os.environ.get("AZURE_TENANT_ID"),
-        client_id= os.environ.get("AZURE_CLIENT_APP_ID"),
-        client_secret= os.environ.get("AZURE_CLIENT_APP_SECRET")
+    azd_credential = (
+        AzureDeveloperCliCredential()
+        if args.tenantid is None
+        else AzureDeveloperCliCredential(tenant_id=args.tenantid, process_timeout=1200)
     )
 
     if args.removeall:
