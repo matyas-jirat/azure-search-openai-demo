@@ -85,12 +85,13 @@ class MetadataExtraction:
 
         async with session.post(url, headers=headers, json=data) as response:
             apim_request_id = response.headers.get("apim-request-id", "Not Found")
+            self.logger.info(f"File: {file_name} was sent for processing of metadata.")
         time.sleep(1)
 
         url = f"https://ai-viktorsohajekai089949226317.cognitiveservices.azure.com/documentintelligence/documentModels/Tatra_ner_v2/analyzeResults/{apim_request_id}?api-version=2024-07-31-preview"
         headers = {"Ocp-apim-subscription-key": self.api_key}
 
-        while True:
+        for _ in range(max_retries):
             async with session.get(url, headers=headers) as response:
                 response_json = await response.json()
 
@@ -99,6 +100,7 @@ class MetadataExtraction:
                     continue
 
                 if response_json["status"] == "succeeded":
+                    self.logger(f"File: {file_name} was successfully extracted.")
                     return (file_name, self._parse_fields(response_json))
                 elif response_json["status"] == "failed":
                     raise ValueError(
