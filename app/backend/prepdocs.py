@@ -418,6 +418,7 @@ if __name__ == "__main__":
             search_key=clean_key_if_exists(args.searchkey),
         )
     )
+    logger.info("setup search info completed")
     blob_manager = setup_blob_manager(
         azure_credential=azd_credential,
         storage_account=args.storageaccount,
@@ -427,6 +428,7 @@ if __name__ == "__main__":
         search_images=args.searchimages,
         storage_key=clean_key_if_exists(args.storagekey),
     )
+    logger.info("setup blob manager completed")
     list_file_strategy = setup_list_file_strategy(
         azure_credential=azd_credential,
         local_files=args.files,
@@ -435,6 +437,7 @@ if __name__ == "__main__":
         datalake_path=args.datalakepath,
         datalake_key=clean_key_if_exists(args.datalakekey),
     )
+    logger.info("setup list file strategy completed")
     openai_embeddings_service = setup_embeddings_service(
         azure_credential=azd_credential,
         openai_host=args.openaihost,
@@ -448,6 +451,7 @@ if __name__ == "__main__":
         disable_vectors=args.novectors,
         disable_batch_vectors=args.disablebatchvectors,
     )
+    logger.info("setup openai embeddings service completed")
 
     ingestion_strategy: Strategy
     if use_int_vectorization:
@@ -488,14 +492,20 @@ if __name__ == "__main__":
             use_acls=args.useacls,
             category=args.category,
         )
+    logger.info("setup ingestion strategy completed")
 
-    metadata_extraction = MetadataExtraction(
-        list_file_strategy=ingestion_strategy.list_file_strategy,
-        blob_manager=ingestion_strategy.blob_manager,
-        api_key=args.aiserviceapikey,
-        metadata_file_path=args.aiservicemetadatafilename,
-    )
-    asyncio.run(metadata_extraction.run())
+    
+    
+    if args.removeall or args.remove:
+        pass
+    else:
+        metadata_extraction = MetadataExtraction(
+            list_file_strategy=ingestion_strategy.list_file_strategy,
+            blob_manager=ingestion_strategy.blob_manager,
+            api_key=args.aiserviceapikey,
+            metadata_file_path=args.aiservicemetadatafilename,
+        )
+        asyncio.run(metadata_extraction.run())
 
     loop.run_until_complete(main(ingestion_strategy, setup_index=not args.remove and not args.removeall))
     loop.close()

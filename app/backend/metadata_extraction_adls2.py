@@ -173,7 +173,7 @@ class MetadataExtraction:
             with open(f"{os.path.basename(self.metadata_file_path)}.csv", "r", newline="", encoding="utf-8") as csv_f:
                 with open(self.metadata_file_path, "w", newline="", encoding="utf-8") as txt_f:
                     reader = csv.reader(csv_f, delimiter=delimiter)
-                    txt_f.write("Use this file for all overview questions as you can easily count amount of partners, for getting information about sign dates, penalties, who signed the documents and contracting parties/partners. \n \n")
+                    txt_f.write("Use this file for all overview questions as you can easily count amount of partners, for getting information about sign dates, penalties, who signed the documents and contracting parties/partners. Example questions: List all partners in bullet points? How many partners we have in database? \n \n")
                     for row in reader:
                         txt_f.write(delimiter.join(row) + '\n')
 
