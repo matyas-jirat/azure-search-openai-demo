@@ -138,7 +138,7 @@ jobs:
     - name: Prep Docs
       run: | 
         echo "$AZURE_STORAGE_CONTAINER"
-        ./scripts/prepdocs.sh ${{ github.event.client_payload.argument1 }};
+        ./scripts/prepdocs.sh ${{ github.event.client_payload.argument1 }} ${{ github.event.client_payload.argument2 }};
       env: 
         AZURE_AI_SERVICE_API_KEY: ${{ secrets.AZURE_AI_SERVICE_API_KEY }}
         AZURE_STORAGE_CONTAINER: ${{ vars.AZURE_STORAGE_CONTAINER }}
