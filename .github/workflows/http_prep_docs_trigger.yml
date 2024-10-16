@@ -136,6 +136,9 @@ jobs:
 
     # Runs a single command using the runners shell
     - name: Prep Docs
-      run: ./scripts/prepdocs.sh ;
+      run: | 
+        echo "$AZURE_STORAGE_CONTAINER"
+        ./scripts/prepdocs.sh ;
       env: 
         AZURE_AI_SERVICE_API_KEY: ${{ secrets.AZURE_AI_SERVICE_API_KEY }}
+        AZURE_STORAGE_CONTAINER: ${{ vars.AZURE_STORAGE_CONTAINER }}
