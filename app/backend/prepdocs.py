@@ -514,5 +514,9 @@ if __name__ == "__main__":
         )
         asyncio.run(metadata_extraction.run())
 
-    loop.run_until_complete(main(ingestion_strategy, setup_index=not args.remove and not args.removeall))
+    try:
+        loop.run_until_complete(main(ingestion_strategy, setup_index=not args.remove and not args.removeall))
+    except Exception as e:
+        logger.info("trying again after fail")
+        loop.run_until_complete(main(ingestion_strategy, setup_index=not args.remove and not args.removeall))
     loop.close()
