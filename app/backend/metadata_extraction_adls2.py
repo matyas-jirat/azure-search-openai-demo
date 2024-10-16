@@ -100,7 +100,7 @@ class MetadataExtraction:
                     continue
 
                 if response_json["status"] == "succeeded":
-                    self.logger(f"File: {file_name} was successfully extracted.")
+                    self.logger.info(f"File: {file_name} was successfully extracted.")
                     return (file_name, self._parse_fields(response_json))
                 elif response_json["status"] == "failed":
                     raise ValueError(
