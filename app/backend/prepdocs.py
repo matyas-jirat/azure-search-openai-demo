@@ -419,6 +419,7 @@ if __name__ == "__main__":
         )
     )
     logger.info("setup search info completed")
+    logger.ingo(f"storage_container: {args.container}")
     blob_manager = setup_blob_manager(
         azure_credential=azd_credential,
         storage_account=args.storageaccount,

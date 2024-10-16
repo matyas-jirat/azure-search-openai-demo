@@ -46,7 +46,7 @@ visionEndpointArg=""
 if [ -n "$AZURE_VISION_ENDPOINT" ]; then
   visionEndpointArg="--visionendpoint $AZURE_VISION_ENDPOINT"
 fi
-
+  
 if [ "$USE_GPT4V" = true ]; then
   searchImagesArg="--searchimages"
 fi
