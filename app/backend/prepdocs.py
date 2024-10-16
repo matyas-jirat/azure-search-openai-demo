@@ -497,7 +497,7 @@ if __name__ == "__main__":
     
     
     if args.removeall or args.remove:
-        pass
+        logger.info("Skipping MetadataExtraction as remove or removeall was specified.")
     else:
         logger.info("Starting to set up MetadataExtraction")
         metadata_extraction = MetadataExtraction(
