@@ -397,7 +397,7 @@ if __name__ == "__main__":
     azd_credential = (
         AzureDeveloperCliCredential()
         if args.tenantid is None
-        else AzureDeveloperCliCredential(tenant_id=args.tenantid)
+        else AzureDeveloperCliCredential(tenant_id=args.tenantid, process_timeout=1200)
     )
 
     if args.removeall:
