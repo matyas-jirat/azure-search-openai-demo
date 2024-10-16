@@ -28,7 +28,6 @@ jobs:
       AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
       AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME }}
       AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
-      AZURE_AI_SERVICE_API_KEY: ${{ vars.AZURE_AI_SERVICE_API_KEY }}
       # project specific
       AZURE_OPENAI_SERVICE: ${{ vars.AZURE_OPENAI_SERVICE }}
       AZURE_OPENAI_API_VERSION: ${{ vars.AZURE_OPENAI_API_VERSION }}
@@ -138,3 +137,5 @@ jobs:
     # Runs a single command using the runners shell
     - name: Prep Docs
       run: ./scripts/prepdocs.sh ;
+      env: 
+        AZURE_AI_SERVICE_API_KEY: ${{ secrets.AZURE_AI_SERVICE_API_KEY }}
