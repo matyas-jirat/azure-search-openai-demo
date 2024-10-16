@@ -406,6 +406,10 @@ if __name__ == "__main__":
         document_action = DocumentAction.Remove
     else:
         document_action = DocumentAction.Add
+    
+    # Hate it
+    if args.container == 'content':
+        args.container = 'gptkbcontainer'
 
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
