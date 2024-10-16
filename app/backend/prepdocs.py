@@ -501,7 +501,7 @@ if __name__ == "__main__":
 
     
     
-    """if args.removeall or args.remove:
+    if args.removeall or args.remove:
         logger.info("Skipping MetadataExtraction as remove or removeall was specified.")
     else:
         logger.info("Starting to set up MetadataExtraction")
@@ -511,7 +511,7 @@ if __name__ == "__main__":
             api_key=args.aiserviceapikey,
             metadata_file_path=args.aiservicemetadatafilename,
         )
-        asyncio.run(metadata_extraction.run())"""
+        asyncio.run(metadata_extraction.run())
 
     loop.run_until_complete(main(ingestion_strategy, setup_index=not args.remove and not args.removeall))
     loop.close()
