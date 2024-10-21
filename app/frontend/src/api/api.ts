@@ -79,7 +79,7 @@ export async function getSpeechApi(text: string): Promise<string | null> {
 }
 
 export function getCitationFilePath(citation: string): string {
-    return `https://gen2sharepoint.blob.core.windows.net/gptkbcontainer/${citation}`;
+    return `${BACKEND_URI}/gptkbcontainer/${citation}`;
 }
 
 export async function uploadFileApi(request: FormData, idToken: string): Promise<SimpleAPIResponse> {
