@@ -8,10 +8,12 @@ Write-Host 'Creating python virtual environment ".venv"'
 Start-Process -FilePath ($pythonCmd).Source -ArgumentList "-m venv ./.venv" -Wait -NoNewWindow
 
 $venvPythonPath = "./.venv/scripts/python.exe"
-if (Test-Path -Path "/usr") {
+#if (Test-Path -Path "/usr") {
   # fallback to Linux venv path
-  $venvPythonPath = "./.venv/bin/python"
-}
+  #$venvPythonPath = "./.venv/bin/python"
+#}
 
 Write-Host 'Installing dependencies from "requirements.txt" into virtual environment'
+Write-Host "Python Command: $pythonCmd"
+Write-Host "Venv Python Path: $venvPythonPath"
 Start-Process -FilePath $venvPythonPath -ArgumentList "-m pip install -r app/backend/requirements.txt" -Wait -NoNewWindow
